@@ -23,6 +23,7 @@ wss.on("connection", (socket) => {
 
       const data = JSON.parse(msg);
 
+      // JOIN ROOM
       if (data.type === "JOIN_ROOM") {
 
         const room = data.room;
@@ -33,8 +34,9 @@ wss.on("connection", (socket) => {
 
         rooms[room].add(socket);
         socket.room = room;
+        socket.userName = data.userName;
 
-        console.log(`User joined room ${room}`);
+        console.log(`User ${data.userName} joined room ${room}`);
 
         if (roomState[room]) {
           socket.send(JSON.stringify({
@@ -42,9 +44,9 @@ wss.on("connection", (socket) => {
             content: roomState[room].content
           }));
         }
-
       }
 
+      // INITIAL FILE
       if (data.type === "INIT_FILE") {
 
         const { room, content } = data;
@@ -56,11 +58,10 @@ wss.on("connection", (socket) => {
           };
 
           console.log(`Room ${room} initialized`);
-
         }
-
       }
 
+      // CODE CHANGE
       if (data.type === "CODE_CHANGE") {
 
         const { room, content } = data;
@@ -76,6 +77,28 @@ wss.on("connection", (socket) => {
             client.send(JSON.stringify({
               type: "CODE_CHANGE",
               content: content
+            }));
+
+          }
+
+        });
+      }
+
+      // CURSOR CHANGE (THIS WAS MISSING)
+      if (data.type === "CURSOR_CHANGE") {
+
+        const { room, userName, position } = data;
+
+        if (!rooms[room]) return;
+
+        rooms[room].forEach(client => {
+
+          if (client !== socket && client.readyState === WebSocket.OPEN) {
+
+            client.send(JSON.stringify({
+              type: "CURSOR_CHANGE",
+              userName: userName,
+              position: position
             }));
 
           }

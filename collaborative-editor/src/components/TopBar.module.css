@@ -1,0 +1,76 @@
+.topBar {
+  height: 40px;
+  background-color: var(--bg-panel);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  flex-shrink: 0;
+}
+
+.leftSection, .rightSection {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.projectName {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-highlight);
+}
+
+.fileNameIndicator {
+  font-size: 13px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fileNameIndicator::before {
+  content: '/';
+  color: var(--text-secondary);
+  margin-right: 4px;
+}
+
+.langIndicator {
+  font-size: 12px;
+  color: var(--text-secondary);
+  background-color: var(--bg-base);
+  padding: 4px 8px;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: var(--border-radius-sm);
+  transition: all 0.2s;
+}
+
+.runButton {
+  background-color: var(--accent-base);
+  color: white;
+}
+
+.runButton:hover {
+  background-color: var(--accent-hover);
+}
+
+.shareButton {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.shareButton:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-highlight);
+}

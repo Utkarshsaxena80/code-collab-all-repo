@@ -1,0 +1,86 @@
+:root {
+  /* VS Code inspired Dark Theme Colors */
+  --bg-base: #181818;           /* Deepest background (e.g., sidebar) */
+  --bg-surface: #1e1e1e;        /* Main editor background */
+  --bg-panel: #252526;          /* Panels like explorer */
+  --bg-hover: #2a2d2e;          /* Hover states */
+  --bg-active: #37373d;         /* Active selection */
+  
+  /* Text Colors */
+  --text-primary: #cccccc;      /* Main text */
+  --text-secondary: #969696;    /* Muted text */
+  --text-highlight: #ffffff;    /* Bright white for emphasis */
+
+  /* Accents (No blue/purple as requested) */
+  --accent-base: #4d7a5a;       /* Subtle green */
+  --accent-hover: #5a8e69;      /* Lighter green */
+  --accent-amber: #d7ba7d;      /* Amber / gold for warnings or highlights */
+  
+  /* Borders */
+  --border-color: #333333;
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
+
+  /* Typography */
+  --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, "Courier New", monospace;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  font-family: var(--font-family-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* Custom Scrollbar for a polished look */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-hover); 
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bg-active); 
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.monaco-editor-wrapper {
+  flex: 1;
+  height: 100%;
+}
+

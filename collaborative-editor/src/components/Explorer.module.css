@@ -1,0 +1,132 @@
+.explorer {
+  width: 240px;
+  height: 100%;
+  background-color: var(--bg-panel);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.header {
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  color: var(--text-highlight);
+  font-family: var(--font-family-base);
+}
+
+.sectionHeaderTitleContainer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.headerActions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.sectionHeader:hover .headerActions {
+  opacity: 1;
+}
+
+.actionBtn {
+  color: var(--text-secondary);
+  padding: 2px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.actionBtn:hover {
+  color: var(--text-highlight);
+  background-color: var(--bg-hover);
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.fileTree {
+  display: flex;
+  flex-direction: column;
+  color: var(--text-primary);
+  font-size: 13px;
+  user-select: none;
+}
+
+.folderRow, .fileRow {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px 4px 20px;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.folderRow:hover, .fileRow:hover {
+  background-color: var(--bg-hover);
+}
+
+.fileRow {
+  padding-left: 40px;
+}
+
+.fileRow.active {
+  background-color: var(--bg-active);
+  color: var(--text-highlight);
+}
+
+.fileIcon {
+  color: var(--text-secondary);
+}
+
+.fileRow.active .fileIcon {
+  color: var(--accent-amber);
+}
+
+.folderContents {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputRow {
+  padding-left: 40px;
+  background-color: var(--bg-hover);
+}
+
+.addInput {
+  background: var(--bg-base);
+  border: 1px solid var(--accent-base);
+  color: var(--text-highlight);
+  font-family: var(--font-family-base);
+  font-size: 13px;
+  padding: 2px 4px;
+  width: 130px;
+  outline: none;
+}
+

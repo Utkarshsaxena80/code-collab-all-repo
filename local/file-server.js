@@ -16,54 +16,39 @@ app.get("/run", (req, res) => {
                 res.send(err);
                 return;
             }
-            
             sftp.fastPut(LOCAL_FILE, REMOTE_FILE, (err) => {
                 if (err) {
                     res.send("Upload failed: " + err);
                     return;
                 }
-
                 console.log("File uploaded");
-
                 const command =
                     "docker run --rm -v /home/ubuntu:/app python:3.9-alpine python /app/test.py";
-
                 conn.exec(command, (err, stream) => {
-
                     if (err) {
                         res.send(err);
                         return;
                     }
-
                     let output = "";
-
                     stream.on("data", (data) => {
                         output += data.toString();
                     });
-
                     stream.stderr.on("data", (data) => {
                         output += data.toString();
-                    });
-
+                    })
                     stream.on("close", () => {
                         conn.end();
                         res.send(output);
                     });
-
                 });
-
             });
-
         });
-
     }).connect({
         host: EC2_HOST,
         username: USER,
         privateKey: KEY
     });
-
 });
-
 app.listen(3000, () => {
     console.log("Server running on port 3000");
 });

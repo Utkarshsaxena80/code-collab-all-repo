@@ -81,7 +81,7 @@ export default function CodeEditor({ userName, file, room }) {
 
     if (!room) return;
 
-    const ws = new WebSocket("ws://localhost:8080");
+    const ws = new WebSocket("wss://code-collab-all-repo.onrender.com");
     wsRef.current = ws;
 
     ws.onopen = () => {

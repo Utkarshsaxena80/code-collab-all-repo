@@ -38,6 +38,177 @@
   line-height: 1.5;
 }
 
+.actionCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  width: 100%;
+}
+
+.actionCard {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  animation: fadeUp 0.5s ease-out forwards;
+}
+
+.actionCard:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary-color);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.actionIcon {
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+}
+
+.actionCard h3 {
+  color: var(--text-highlight);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.actionCard p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.joinFormContainer, .createContainer {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2.5rem;
+  animation: fadeUp 0.5s ease-out forwards;
+}
+
+.joinForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.joinForm h2 {
+  color: var(--text-highlight);
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 1rem;
+  color: var(--text-secondary);
+}
+
+.inputWrapper .roomInput {
+  width: 100%;
+  padding-left: 3rem;
+  text-align: left;
+  letter-spacing: normal;
+}
+
+.roomInput {
+  background-color: var(--bg-base);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  text-align: center;
+  letter-spacing: 0.1em;
+  font-family: monospace;
+  transition: border-color 0.2s;
+}
+
+.roomInput:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.primaryButton {
+  background-color: var(--primary-color);
+  color: black;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.primaryButton:hover {
+  opacity: 0.9;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.backButton:hover {
+  color: var(--text-primary);
+}
+
+.roomCodeDisplay {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.roomCodeDisplay h2 {
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.welcomeText {
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: fadeUp 0.5s ease-out forwards;
+}
+
+.welcomeText h2 {
+  color: var(--text-highlight);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.welcomeText p {
+  color: var(--text-secondary);
+}
+
+.roomCodeDisplay h2 span {
+  color: var(--primary-color);
+  font-size: 2rem;
+  letter-spacing: 0.1em;
+  margin-left: 0.5rem;
+}
+
+.roomCodeDisplay p {
+  color: var(--text-secondary);
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -45,7 +216,6 @@
   width: 100%;
 }
 
-/* Add a subtle entrance animation */
 .grid > * {
   animation: fadeUp 0.5s ease-out forwards;
   opacity: 0;

@@ -74,3 +74,22 @@
   background-color: var(--bg-hover);
   color: var(--text-highlight);
 }
+
+.roomIndicator {
+  font-size: 12px;
+  color: var(--text-secondary);
+  background-color: var(--bg-surface);
+  padding: 4px 8px;
+  border-radius: var(--border-radius-sm);
+  border: 1px dashed var(--primary-color);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.roomIndicator span {
+  color: var(--primary-color);
+  font-weight: 600;
+  font-family: monospace;
+  letter-spacing: 0.05em;
+}

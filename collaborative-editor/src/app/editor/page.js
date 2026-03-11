@@ -11,10 +11,11 @@ import styles from './page.module.css';
 // Component that uses useSearchParams must be wrapped in Suspense in Next.js App Router
 function EditorContent() {
   const searchParams = useSearchParams();
-  const lang = searchParams.get('lang') || 'javascript';
+  const userName = searchParams.get('name') || 'Anonymous';
+  const room = searchParams.get('room') || 'default-room';
   const [activeFile, setActiveFile] = useState({ 
     id: '1', 
-    name: 'main.js', 
+    name: 'main.py', 
     type: 'file', 
     content: null // null means we'll fall back to default code
   });
@@ -24,9 +25,9 @@ function EditorContent() {
       <Sidebar />
       <Explorer activeFileId={activeFile?.id} onSelectFile={setActiveFile} />
       <div className={styles.mainArea}>
-        <TopBar language={lang} fileName={activeFile?.name} />
+        <TopBar userName={userName} fileName={activeFile?.name} room={room} />
         <div className={styles.editorContainer}>
-          <CodeEditor language={lang} file={activeFile} />
+          <CodeEditor userName={userName} file={activeFile} room={room} />
         </div>
       </div>
     </div>

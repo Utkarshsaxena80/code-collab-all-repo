@@ -1,19 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Play, Share2 } from 'lucide-react';
+import { Play, Share2, User } from 'lucide-react';
 import styles from './TopBar.module.css';
 
-export default function TopBar({ language, fileName }) {
-  // Format language name for display (e.g. cpp -> C++)
-  const displayLang = {
-    javascript: 'JavaScript',
-    python: 'Python',
-    cpp: 'C++',
-    java: 'Java',
-    go: 'Go'
-  }[language] || 'JavaScript';
-
+export default function TopBar({ userName, fileName, room }) {
   return (
     <div className={styles.topBar}>
       <div className={styles.leftSection}>
@@ -23,9 +14,17 @@ export default function TopBar({ language, fileName }) {
             {fileName}
           </div>
         )}
-        <div className={styles.langIndicator}>
-          {displayLang} Environment
-        </div>
+        {userName && (
+          <div className={styles.langIndicator} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <User size={14} />
+            {userName}
+          </div>
+        )}
+        {room && (
+          <div className={styles.roomIndicator}>
+            Room: <span>{room}</span>
+          </div>
+        )}
       </div>
       
       <div className={styles.rightSection}>

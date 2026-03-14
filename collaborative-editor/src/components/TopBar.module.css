@@ -1,24 +1,40 @@
 .topBar {
-  height: 40px;
-  background-color: var(--bg-panel);
+  min-height: 62px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
+    var(--bg-panel);
   border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: 10px 18px;
   flex-shrink: 0;
 }
 
 .leftSection, .rightSection {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.projectBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-right: 4px;
 }
 
 .projectName {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-highlight);
+  font-size: 14px;
+  font-weight: 700;
+  color: #f5f7fa;
+  letter-spacing: 0.02em;
+}
+
+.projectMeta {
+  font-size: 11px;
+  color: #8f98a3;
 }
 
 .fileNameIndicator {
@@ -27,21 +43,36 @@
   display: flex;
   align-items: center;
   gap: 4px;
+  padding: 7px 10px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 999px;
 }
 
 .fileNameIndicator::before {
-  content: '/';
-  color: var(--text-secondary);
-  margin-right: 4px;
+  content: 'Editing';
+  color: #8f98a3;
+  margin-right: 6px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
+.runtimeIndicator,
 .langIndicator {
   font-size: 12px;
   color: var(--text-secondary);
-  background-color: var(--bg-base);
-  padding: 4px 8px;
-  border-radius: var(--border-radius-sm);
-  border: 1px solid var(--border-color);
+  background-color: rgba(255, 255, 255, 0.03);
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.runtimeIndicator {
+  color: #cfd6de;
 }
 
 .actionButton {
@@ -49,25 +80,32 @@
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  font-weight: 500;
-  padding: 6px 12px;
-  border-radius: var(--border-radius-sm);
+  font-weight: 600;
+  padding: 9px 14px;
+  border-radius: 12px;
   transition: all 0.2s;
 }
 
+.actionButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 .runButton {
-  background-color: var(--accent-base);
+  background:
+    linear-gradient(180deg, var(--accent-hover), var(--accent-base));
   color: white;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
 .runButton:hover {
-  background-color: var(--accent-hover);
+  filter: brightness(1.05);
 }
 
 .shareButton {
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.03);
   color: var(--text-primary);
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .shareButton:hover {
@@ -78,18 +116,116 @@
 .roomIndicator {
   font-size: 12px;
   color: var(--text-secondary);
-  background-color: var(--bg-surface);
-  padding: 4px 8px;
-  border-radius: var(--border-radius-sm);
-  border: 1px dashed var(--primary-color);
+  background-color: rgba(255, 255, 255, 0.03);
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px dashed rgba(215, 186, 125, 0.45);
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
 .roomIndicator span {
-  color: var(--primary-color);
+  color: var(--accent-amber);
   font-weight: 600;
-  font-family: monospace;
+  font-family: var(--font-family-mono);
   letter-spacing: 0.05em;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(10, 12, 16, 0.58);
+  backdrop-filter: blur(6px);
+  display: grid;
+  place-items: center;
+  z-index: 40;
+  padding: 20px;
+}
+
+.modalCard {
+  width: min(420px, 100%);
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 120px),
+    #171b22;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+  padding: 22px;
+}
+
+.modalClose {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: #9aa3ad;
+}
+
+.modalClose:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.modalEyebrow {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9eaa96;
+  margin-bottom: 10px;
+}
+
+.modalTitle {
+  font-size: 22px;
+  line-height: 1.15;
+  font-weight: 700;
+  color: #f6f7f9;
+  margin-bottom: 8px;
+}
+
+.modalText {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #9ca6b2;
+  margin-bottom: 18px;
+}
+
+.roomCodeBox {
+  font-family: var(--font-family-mono);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #f6e8c2;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(215, 186, 125, 0.45);
+  border-radius: 16px;
+  padding: 16px 18px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.copyButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(90, 142, 105, 1), rgba(77, 122, 90, 1));
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.copyButton:hover {
+  filter: brightness(1.05);
 }

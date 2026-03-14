@@ -18,8 +18,66 @@
   flex: 1;
   position: relative;
   /* Next.js/Monaco need explicit height on wrapper */
-  height: calc(100vh - 40px); /* 100vh minus TopBar height */
+  height: calc(100vh - 300px);
   overflow: hidden;
+}
+
+.ioPanel {
+  height: 260px;
+  background-color: #10151d;
+  border-top: 1px solid var(--border-color);
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) 1fr;
+  min-height: 0;
+}
+
+.inputPanel,
+.outputPanel {
+  min-height: 0;
+  background-color: #111827;
+  display: flex;
+  flex-direction: column;
+}
+
+.inputPanel {
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.outputHeader {
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.inputArea {
+  flex: 1;
+  width: 100%;
+  resize: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #d8dee9;
+  padding: 14px;
+  font-size: 13px;
+  line-height: 1.6;
+  font-family: Consolas, Monaco, 'Courier New', monospace;
+}
+
+.outputBody {
+  flex: 1;
+  margin: 0;
+  padding: 14px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #e5e7eb;
+  font-size: 13px;
+  line-height: 1.5;
+  font-family: Consolas, Monaco, 'Courier New', monospace;
 }
 
 .loading {

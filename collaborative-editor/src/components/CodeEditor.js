@@ -18,9 +18,7 @@ const getColorForUser = (name) => {
   const index = Math.abs(hash) % cursorColors.length;
   return cursorColors[index];
 };
-
 export default function CodeEditor({ userName, file, room }) {
-
   const wsRef = useRef(null);
   const editorRef = useRef(null);
   const monacoRef = useRef(null);
@@ -78,69 +76,52 @@ export default function CodeEditor({ userName, file, room }) {
   }, []);
 
   useEffect(() => {
-
+    /**
+     * rooms = {
+   room1: [socket1, socket2]
+}
+     */
     if (!room) return;
-
     const ws = new WebSocket("wss://code-collab-all-repo.onrender.com");
     wsRef.current = ws;
-
-    ws.onopen = () => {
-
+    ws.onopen=()=>{
       console.log("Connected to websocket");
-
       ws.send(JSON.stringify({
         type: "JOIN_ROOM",
         room: room,
         userName: userName
       }));
-
       ws.send(JSON.stringify({
-        type: "INIT_FILE",
+        type:"INIT_FILE",
         room: room,
         language: "python",
         content: code
       }));
-
     };
-
     ws.onmessage = (event) => {
-
       try {
-
         const data = JSON.parse(event.data);
-
-        if (data.type === "ROOM_STATE") {
-
-          const editor = editorRef.current;
+        console.log(data)
+        if (data.type==="ROOM_STATE") {
+          const editor=editorRef.current;
           if (!editor) return;
-
           isRemoteUpdate.current = true;
           editor.setValue(data.content);
           isRemoteUpdate.current = false;
         }
-
         if (data.type === "CODE_CHANGE") {
-
           const editor = editorRef.current;
           if (!editor) return;
-
           const model = editor.getModel();
-
           isRemoteUpdate.current = true;
-
           if (model && model.getValue() !== data.content) {
             editor.setValue(data.content);
           }
-
           isRemoteUpdate.current = false;
-
         }
-
         if (data.type === "CURSOR_CHANGE") {
-          const { userName: remoteUserName, position } = data;
-          
+          const { userName: remoteUserName, position } = data; 
           if (remoteUserName === userName || !remoteUserName) return;
-
           const editor = editorRef.current;
           const monaco = monacoRef.current;
           if (!editor || !monaco) return;
@@ -216,8 +197,11 @@ export default function CodeEditor({ userName, file, room }) {
   }, [room, userName]); // Exclude code dependency to avoid reconnecting
 
   const handleEditorChange = (value) => {
+    const nextValue = value ?? '';
 
     if (isRemoteUpdate.current) return;
+
+    file?.onContentChange?.(nextValue);
 
     const ws = wsRef.current;
 
@@ -227,16 +211,14 @@ export default function CodeEditor({ userName, file, room }) {
       type: "CODE_CHANGE",
       room: room,
       userName: userName,
-      content: value
+      content: nextValue
     }));
 
   };
 
   const handleEditorDidMount = (editor, monaco) => {
-
     editorRef.current = editor;
     monacoRef.current = monaco;
-
     monaco.editor.defineTheme('custom-dark', {
       base: 'vs-dark',
       inherit: true,

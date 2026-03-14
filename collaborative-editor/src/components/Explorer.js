@@ -1,24 +1,47 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ChevronDown, ChevronRight, File, FolderPlus, FilePlus } from 'lucide-react';
+import { ChevronDown, ChevronRight, FileCode2, FolderPlus, FilePlus } from 'lucide-react';
 import styles from './Explorer.module.css';
 
 const INITIAL_FILES = {
   id: 'root',
-  name: 'src',
+  name: 'workspace',
   type: 'folder',
   isOpen: true,
   children: [
-    { id: '1', name: 'main.js', type: 'file', content: 'function hello() {\n  console.log("Hello world");\n}' },
-    { id: '2', name: 'utils.js', type: 'file', content: 'export const add = (a, b) => a + b;' }
+    { id: '1', name: 'main.py', type: 'file', content: 'def hello():\n    print("Hello world")\n\nhello()' },
+    { id: '2', name: 'helpers.py', type: 'file', content: 'def add(a, b):\n    return a + b' }
   ]
+};
+
+const getFileParts = (fileName) => {
+  const lastDotIndex = fileName.lastIndexOf('.');
+
+  if (lastDotIndex <= 0) {
+    return { baseName: fileName, extension: '' };
+  }
+
+  return {
+    baseName: fileName.slice(0, lastDotIndex),
+    extension: fileName.slice(lastDotIndex + 1),
+  };
 };
 
 export default function Explorer({ activeFileId, onSelectFile }) {
   const [fileSystem, setFileSystem] = useState(INITIAL_FILES);
   const [isAddingItem, setIsAddingItem] = useState(null); // 'file' or 'folder'
   const [newItemName, setNewItemName] = useState('');
+
+  const normalizeNewFileName = (name) => {
+    const trimmedName = name.trim();
+
+    if (!trimmedName || isAddingItem !== 'file') {
+      return trimmedName;
+    }
+
+    return trimmedName.includes('.') ? trimmedName : `${trimmedName}.py`;
+  };
 
   const handleCreateItem = (e, type) => {
     e.stopPropagation();
@@ -32,14 +55,16 @@ export default function Explorer({ activeFileId, onSelectFile }) {
 
   const submitNewItem = (e) => {
     if (e.key === 'Enter') {
-      if (!newItemName.trim()) {
+      const normalizedName = normalizeNewFileName(newItemName);
+
+      if (!normalizedName) {
         setIsAddingItem(null);
         return;
       }
 
       const newItem = {
         id: Date.now().toString(),
-        name: newItemName.trim(),
+        name: normalizedName,
         type: isAddingItem,
         ...(isAddingItem === 'folder' ? { isOpen: true, children: [] } : { content: '' })
       };
@@ -98,7 +123,7 @@ export default function Explorer({ activeFileId, onSelectFile }) {
                 {/* Input for new items */}
                 {isAddingItem && (
                   <div className={`${styles.fileRow} ${styles.inputRow}`}>
-                    {isAddingItem === 'file' ? <File size={14} className={styles.fileIcon} /> : <ChevronRight size={14} />}
+                    {isAddingItem === 'file' ? <FileCode2 size={14} className={styles.fileIcon} /> : <ChevronRight size={14} />}
                     <input 
                       autoFocus
                       type="text" 
@@ -107,7 +132,7 @@ export default function Explorer({ activeFileId, onSelectFile }) {
                       onChange={e => setNewItemName(e.target.value)}
                       onKeyDown={submitNewItem}
                       onBlur={() => setIsAddingItem(null)}
-                      placeholder={`New ${isAddingItem}...`}
+                      placeholder={isAddingItem === 'file' ? 'New Python file...' : 'New folder...'}
                     />
                   </div>
                 )}
@@ -115,14 +140,17 @@ export default function Explorer({ activeFileId, onSelectFile }) {
                 {/* Render children */}
                 {fileSystem.children.map(item => {
                   if (item.type === 'file') {
+                    const { baseName, extension } = getFileParts(item.name);
+
                     return (
                       <div 
                         key={item.id} 
                         className={`${styles.fileRow} ${activeFileId === item.id ? styles.active : ''}`}
                         onClick={() => onSelectFile(item)}
                       >
-                        <File size={14} className={styles.fileIcon} />
-                        <span className={styles.fileName}>{item.name}</span>
+                        <FileCode2 size={14} className={styles.fileIcon} />
+                        <span className={styles.fileName}>{baseName}</span>
+                        {extension && <span className={styles.fileExtension}>.{extension}</span>}
                       </div>
                     );
                   } else if (item.type === 'folder') {

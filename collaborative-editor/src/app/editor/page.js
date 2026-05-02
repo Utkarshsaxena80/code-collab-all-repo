@@ -11,6 +11,7 @@ import {
   getLanguageById,
   getLanguageForFileName,
 } from '@/lib/languages';
+import ChatPanel from '@/components/ChatPanel';
 import styles from './page.module.css';
 
 const RUN_API_URL = process.env.NEXT_PUBLIC_RUN_API_URL || 'http://localhost:3001/run';
@@ -132,6 +133,7 @@ function EditorContent() {
         </div>
         </div>
       </div>
+      <ChatPanel userName={userName} room={room} />
     </div>
   );
 }

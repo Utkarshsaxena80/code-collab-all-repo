@@ -2,9 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Editor from '@monaco-editor/react';
-
-const DEFAULT_CODE = `def hello():
-    print("Hello world")`;
+import { getLanguageForFileName } from '@/lib/languages';
 
 const cursorColors = [
   '#ff0000', '#00ff00', '#3b82f6', '#d946ef', '#06b6d4', '#eab308', '#f97316'
@@ -18,7 +16,7 @@ const getColorForUser = (name) => {
   const index = Math.abs(hash) % cursorColors.length;
   return cursorColors[index];
 };
-export default function CodeEditor({ userName, file, room }) {
+export default function CodeEditor({ userName, file, room, language, roomLanguage }) {
   const wsRef = useRef(null);
   const editorRef = useRef(null);
   const monacoRef = useRef(null);
@@ -27,11 +25,35 @@ export default function CodeEditor({ userName, file, room }) {
   
   // Track remote cursors in state to render HTML nametags
   const [remoteCursors, setRemoteCursors] = useState({});
+  const activeLanguage = getLanguageForFileName(file?.name, language?.id);
 
   const code =
     file?.content !== undefined && file?.content !== null
       ? file.content
-      : DEFAULT_CODE;
+      : activeLanguage.defaultCode;
+
+  useEffect(() => {
+    const editor = editorRef.current;
+    const monaco = monacoRef.current;
+
+    if (!editor || !monaco) return;
+
+    const model = editor.getModel();
+
+    if (!model) return;
+
+    isRemoteUpdate.current = true;
+    monaco.editor.setModelLanguage(model, activeLanguage.monacoLanguage);
+
+    if (model.getValue() !== code) {
+      editor.setValue(code);
+    }
+
+    isRemoteUpdate.current = false;
+
+  // Code is intentionally omitted so local typing does not reset the cursor on every keystroke.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [file?.id, activeLanguage.monacoLanguage]);
 
   // Update cursor positions when the editor scrolls or resizes
   useEffect(() => {
@@ -94,7 +116,7 @@ export default function CodeEditor({ userName, file, room }) {
       ws.send(JSON.stringify({
         type:"INIT_FILE",
         room: room,
-        language: "python",
+        language: roomLanguage?.id || activeLanguage.id,
         content: code
       }));
     };
@@ -184,9 +206,11 @@ export default function CodeEditor({ userName, file, room }) {
       console.log("WebSocket disconnected");
     };
 
+    const activeDecorations = decorationsRef.current;
+
     return () => {
       ws.close();
-      Object.keys(decorationsRef.current).forEach(user => {
+      Object.keys(activeDecorations).forEach(user => {
         const className = `remote-cursor-${user.replace(/[^a-zA-Z0-9]/g, '')}`;
         const style = document.getElementById(`style-${className}`);
         if(style) style.remove();
@@ -194,7 +218,7 @@ export default function CodeEditor({ userName, file, room }) {
     };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [room, userName]); // Exclude code dependency to avoid reconnecting
+  }, [room, userName, roomLanguage?.id]); // Exclude code dependency to avoid reconnecting
 
   const handleEditorChange = (value) => {
     const nextValue = value ?? '';
@@ -233,6 +257,10 @@ export default function CodeEditor({ userName, file, room }) {
     });
 
     monaco.editor.setTheme('custom-dark');
+    const model = editor.getModel();
+    if (model) {
+      monaco.editor.setModelLanguage(model, activeLanguage.monacoLanguage);
+    }
     editor.setValue(code);
 
     editor.onDidChangeCursorPosition((e) => {
@@ -252,7 +280,7 @@ export default function CodeEditor({ userName, file, room }) {
       <Editor
         height="100%"
         width="100%"
-        language="python"
+        language={activeLanguage.monacoLanguage}
         defaultValue={code}
         theme="vs-dark"
         onChange={handleEditorChange}

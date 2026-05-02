@@ -3,11 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  TerminalSquare,
   Users,
   Plus,
   User
 } from 'lucide-react';
+import { DEFAULT_LANGUAGE_ID, LANGUAGE_OPTIONS } from '@/lib/languages';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -15,17 +15,17 @@ export default function Home() {
   const [view, setView] = useState('name'); // 'name' | 'initial' | 'join'
   const [userName, setUserName] = useState('');
   const [roomCode, setRoomCode] = useState('');
-  const [generatedRoomCode, setGeneratedRoomCode] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState(DEFAULT_LANGUAGE_ID);
 
   const handleCreateRoom = () => {
     const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-    router.push(`/editor?room=${code}&lang=python&name=${encodeURIComponent(userName)}`);
+    router.push(`/editor?room=${code}&lang=${selectedLanguage}&name=${encodeURIComponent(userName)}`);
   };
 
   const handleJoinRoom = (e) => {
     e.preventDefault();
     if (roomCode.trim()) {
-      router.push(`/editor?room=${roomCode.trim()}&lang=python&name=${encodeURIComponent(userName)}`);
+      router.push(`/editor?room=${roomCode.trim()}&lang=${selectedLanguage}&name=${encodeURIComponent(userName)}`);
     }
   };
 
@@ -42,7 +42,7 @@ export default function Home() {
         <div className={styles.header}>
           <h1 className={styles.title}>Code Sync</h1>
           <p className={styles.subtitle}>
-            Code together in real-time with instant Python environments.
+            Code together in real-time with Python, TypeScript, Go, and Node.js workspaces.
           </p>
         </div>
 
@@ -74,11 +74,30 @@ export default function Home() {
               <h2>Welcome, {userName}!</h2>
               <p>Ready to code?</p>
             </div>
+            <div className={styles.languagePicker}>
+              <div>
+                <h3>Choose a room language</h3>
+                <p>This sets the starter files. The editor still detects syntax from each file extension.</p>
+              </div>
+              <div className={styles.languageGrid}>
+                {LANGUAGE_OPTIONS.map((language) => (
+                  <button
+                    key={language.id}
+                    type="button"
+                    className={`${styles.languageOption} ${selectedLanguage === language.id ? styles.languageOptionActive : ''}`}
+                    onClick={() => setSelectedLanguage(language.id)}
+                  >
+                    <span>{language.label}</span>
+                    <small>.{language.extension}</small>
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className={styles.actionCards}>
               <div className={styles.actionCard} onClick={handleCreateRoom}>
                 <Plus size={32} className={styles.actionIcon} />
                 <h3>Create a Room</h3>
-                <p>Start a new Python coding session</p>
+                <p>Start a new {LANGUAGE_OPTIONS.find((language) => language.id === selectedLanguage)?.label} coding session</p>
               </div>
               <div className={styles.actionCard} onClick={() => setView('join')}>
                 <Users size={32} className={styles.actionIcon} />
@@ -94,6 +113,18 @@ export default function Home() {
             <button className={styles.backButton} onClick={() => setView('initial')}>&larr; Back</button>
             <form onSubmit={handleJoinRoom} className={styles.joinForm}>
               <h2>Join Existing Room</h2>
+              <div className={styles.compactLanguagePicker}>
+                {LANGUAGE_OPTIONS.map((language) => (
+                  <button
+                    key={language.id}
+                    type="button"
+                    className={`${styles.compactLanguageOption} ${selectedLanguage === language.id ? styles.compactLanguageOptionActive : ''}`}
+                    onClick={() => setSelectedLanguage(language.id)}
+                  >
+                    {language.label}
+                  </button>
+                ))}
+              </div>
               <input
                 type="text"
                 placeholder="Enter Room Code (e.g. A1B2C3)"

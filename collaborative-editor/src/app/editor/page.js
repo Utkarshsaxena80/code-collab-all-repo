@@ -6,6 +6,11 @@ import Sidebar from '@/components/Sidebar';
 import Explorer from '@/components/Explorer';
 import TopBar from '@/components/TopBar';
 import CodeEditor from '@/components/CodeEditor';
+import {
+  createDefaultActiveFile,
+  getLanguageById,
+  getLanguageForFileName,
+} from '@/lib/languages';
 import ChatPanel from '@/components/ChatPanel';
 import styles from './page.module.css';
 
@@ -16,15 +21,12 @@ function EditorContent() {
   const searchParams = useSearchParams();
   const userName = searchParams.get('name') || 'Anonymous';
   const room = searchParams.get('room') || 'default-room';
+  const roomLanguage = getLanguageById(searchParams.get('lang'));
   const [editorOutput, setEditorOutput] = useState('');
   const [stdinValue, setStdinValue] = useState('');
   const [isRunning, setIsRunning] = useState(false);
-  const [activeFile, setActiveFile] = useState({ 
-    id: '1', 
-    name: 'main.py', 
-    type: 'file', 
-    content: null // null means we'll fall back to default code
-  });
+  const [activeFile, setActiveFile] = useState(() => createDefaultActiveFile(roomLanguage.id));
+  const activeLanguage = getLanguageForFileName(activeFile?.name, roomLanguage.id);
 
   const handleSelectFile = (file) => {
     setActiveFile(file);
@@ -91,11 +93,16 @@ function EditorContent() {
   return (
     <div className={styles.layout}>
       <Sidebar />
-      <Explorer activeFileId={activeFile?.id} onSelectFile={handleSelectFile} />
+      <Explorer
+        activeFileId={activeFile?.id}
+        defaultLanguageId={roomLanguage.id}
+        onSelectFile={handleSelectFile}
+      />
       <div className={styles.mainArea}>
         <TopBar
           userName={userName}
           fileName={activeFile?.name}
+          language={activeLanguage}
           room={room}
           isRunning={isRunning}
           onRun={handleRunCode}
@@ -105,6 +112,8 @@ function EditorContent() {
             userName={userName}
             file={{ ...activeFile, onContentChange: handleCodeChange }}
             room={room}
+            language={activeLanguage}
+            roomLanguage={roomLanguage}
           />
         </div>
         <div className={styles.ioPanel}>

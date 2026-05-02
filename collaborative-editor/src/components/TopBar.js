@@ -7,6 +7,7 @@ import styles from './TopBar.module.css';
 export default function TopBar({
   userName,
   fileName,
+  language,
   room,
   isRunning = false,
   onRun,
@@ -42,7 +43,7 @@ export default function TopBar({
         <div className={styles.leftSection}>
           <div className={styles.projectBlock}>
             <div className={styles.projectName}>Code Sync</div>
-            <div className={styles.projectMeta}>Collaborative Python workspace</div>
+            <div className={styles.projectMeta}>Collaborative {language?.label || 'code'} workspace</div>
           </div>
           {fileName && (
             <div className={styles.fileNameIndicator}>
@@ -51,7 +52,7 @@ export default function TopBar({
           )}
           <div className={styles.runtimeIndicator}>
             <TerminalSquare size={13} />
-            Python
+            {language?.runtimeLabel || 'Code'}
           </div>
           {userName && (
             <div className={styles.langIndicator}>
@@ -100,7 +101,7 @@ export default function TopBar({
             <div className={styles.modalEyebrow}>Invite collaborator</div>
             <div className={styles.modalTitle}>Share this room code</div>
             <div className={styles.modalText}>
-              Send this code to anyone you want to join the current Python session.
+              Send this code to anyone you want to join the current {language?.label || 'code'} session.
             </div>
             <div className={styles.roomCodeBox}>{room}</div>
             <button className={styles.copyButton} onClick={handleCopyRoom}>

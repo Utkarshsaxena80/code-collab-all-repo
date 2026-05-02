@@ -2,18 +2,8 @@
 
 import React, { useState } from 'react';
 import { ChevronDown, ChevronRight, FileCode2, FolderPlus, FilePlus } from 'lucide-react';
+import { createInitialFileSystem, getLanguageById } from '@/lib/languages';
 import styles from './Explorer.module.css';
-
-const INITIAL_FILES = {
-  id: 'root',
-  name: 'workspace',
-  type: 'folder',
-  isOpen: true,
-  children: [
-    { id: '1', name: 'main.py', type: 'file', content: 'def hello():\n    print("Hello world")\n\nhello()' },
-    { id: '2', name: 'helpers.py', type: 'file', content: 'def add(a, b):\n    return a + b' }
-  ]
-};
 
 const getFileParts = (fileName) => {
   const lastDotIndex = fileName.lastIndexOf('.');
@@ -28,8 +18,9 @@ const getFileParts = (fileName) => {
   };
 };
 
-export default function Explorer({ activeFileId, onSelectFile }) {
-  const [fileSystem, setFileSystem] = useState(INITIAL_FILES);
+export default function Explorer({ activeFileId, defaultLanguageId, onSelectFile }) {
+  const defaultLanguage = getLanguageById(defaultLanguageId);
+  const [fileSystem, setFileSystem] = useState(() => createInitialFileSystem(defaultLanguage.id));
   const [isAddingItem, setIsAddingItem] = useState(null); // 'file' or 'folder'
   const [newItemName, setNewItemName] = useState('');
 
@@ -40,7 +31,7 @@ export default function Explorer({ activeFileId, onSelectFile }) {
       return trimmedName;
     }
 
-    return trimmedName.includes('.') ? trimmedName : `${trimmedName}.py`;
+    return trimmedName.includes('.') ? trimmedName : `${trimmedName}.${defaultLanguage.extension}`;
   };
 
   const handleCreateItem = (e, type) => {
@@ -132,7 +123,7 @@ export default function Explorer({ activeFileId, onSelectFile }) {
                       onChange={e => setNewItemName(e.target.value)}
                       onKeyDown={submitNewItem}
                       onBlur={() => setIsAddingItem(null)}
-                      placeholder={isAddingItem === 'file' ? 'New Python file...' : 'New folder...'}
+                      placeholder={isAddingItem === 'file' ? defaultLanguage.newFilePlaceholder : 'New folder...'}
                     />
                   </div>
                 )}

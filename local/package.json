@@ -1,5 +1,11 @@
 {
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "check": "node --check server.js && node --check src/app.js && node --check src/config.js && node --check src/file-utils.js && node --check src/ssh-runner.js"
+  },
   "dependencies": {
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "ssh2": "^1.17.0"
   }

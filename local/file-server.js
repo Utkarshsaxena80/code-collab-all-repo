@@ -27,12 +27,11 @@ const sanitizeFileName = (fileName = "test.py") => {
         return "test.py";
     }
 
-    return trimmedName.endsWith(".py") ? trimmedName : `${trimmedName}.py`;
+    return trimmedName;
 };
 
 const buildStdinFileName = (safeFileName) => {
-    const baseName = safeFileName.replace(/\.py$/, "");
-    return `${baseName}.stdin.txt`;
+    return `${safeFileName}.stdin.txt`;
 };
 
 app.post("/run", async (req, res) => {
@@ -48,7 +47,19 @@ app.post("/run", async (req, res) => {
     const localStdinPath = path.join(os.tmpdir(), stdinFileName);
     const remoteFilePath = `${REMOTE_DIRECTORY}/${safeFileName}`;
     const remoteStdinPath = `${REMOTE_DIRECTORY}/${stdinFileName}`;
-    const command = `docker run --rm -i -v ${REMOTE_DIRECTORY}:/app python:3.9-alpine sh -c "python /app/${safeFileName} < /app/${stdinFileName}"`;
+    
+    let command;
+    const ext = path.extname(safeFileName).toLowerCase();
+    
+    if (ext === '.js') {
+        command = `docker run --rm -i -v ${REMOTE_DIRECTORY}:/app node:18-alpine sh -c "node /app/${safeFileName} < /app/${stdinFileName}"`;
+    } else if (ext === '.ts') {
+        command = `docker run --rm -i -v ${REMOTE_DIRECTORY}:/app node:18-alpine sh -c "npx -y tsx /app/${safeFileName} < /app/${stdinFileName}"`;
+    } else if (ext === '.go') {
+        command = `docker run --rm -i -v ${REMOTE_DIRECTORY}:/app golang:1.20-alpine sh -c "go run /app/${safeFileName} < /app/${stdinFileName}"`;
+    } else {
+        command = `docker run --rm -i -v ${REMOTE_DIRECTORY}:/app python:3.9-alpine sh -c "python /app/${safeFileName} < /app/${stdinFileName}"`;
+    }
 
     try {
         fs.writeFileSync(localFilePath, code, "utf8");

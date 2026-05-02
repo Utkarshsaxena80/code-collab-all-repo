@@ -3,24 +3,20 @@ const { Client } = require("ssh2");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
-
 const app = express();
 const PORT = process.env.PORT || 3001;
-const EC2_HOST = "34.228.82.196";
+const EC2_HOST = "98.93.217.104";
 const USER = "ubuntu";
-const KEY = fs.readFileSync(path.join(__dirname, "code-colab.pem"));
+const KEY = fs.readFileSync(path.join(__dirname,"code-colab.pem"));
 const REMOTE_DIRECTORY = "/home/ubuntu";
-
 app.use(express.json({ limit: "1mb" }));
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Content-Type");
     res.header("Access-Control-Allow-Methods", "POST, OPTIONS");
-
     if (req.method === "OPTIONS") {
         return res.sendStatus(200);
     }
-
     next();
 });
 
@@ -118,7 +114,6 @@ app.post("/run", async (req, res) => {
                 privateKey: KEY
             });
         });
-
         return res.json({ output });
     } catch (error) {
         return res.status(500).json({

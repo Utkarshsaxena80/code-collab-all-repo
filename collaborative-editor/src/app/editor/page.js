@@ -6,6 +6,7 @@ import Sidebar from '@/components/Sidebar';
 import Explorer from '@/components/Explorer';
 import TopBar from '@/components/TopBar';
 import CodeEditor from '@/components/CodeEditor';
+import ChatPanel from '@/components/ChatPanel';
 import styles from './page.module.css';
 
 const RUN_API_URL = process.env.NEXT_PUBLIC_RUN_API_URL || 'http://localhost:3001/run';
@@ -123,6 +124,7 @@ function EditorContent() {
         </div>
         </div>
       </div>
+      <ChatPanel userName={userName} room={room} />
     </div>
   );
 }
